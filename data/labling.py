@@ -1,4 +1,4 @@
-import pygame,os,pickle,numpy,time
+import pygame,os,numpy,time
 
 pygame.init()
 screen_width, screen_height = 960,540
@@ -34,14 +34,10 @@ while 1:
     pygame.display.update()
     
 
-    for i in 
-
-    # user_input = input()
-    # if user_input == "stop":
-    #     break
-
-
+    for j in element:
+        print(j+":", end=" ")
+        a = input()
+        
 
 
     i+=1
-    
