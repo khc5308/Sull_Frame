@@ -12,5 +12,3 @@ def date2int(day:str):
     first = date(2022,2,21)
     now   = date(y,m,d)
     return int(str(now-first).split()[0])
-
-print(date2int(20220222))
