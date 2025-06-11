@@ -108,16 +108,15 @@ while running and i < len(file_list):
                 exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    running = False
+                    # 저장할 때 key를 문자열로 변환해서 JSON 저장
+                    with open('./data/vec2name.json', 'w', encoding='utf-8') as f: # 인코딩 추가
+                        json.dump({str(k): v for k, v in data.items()}, f, indent=4, ensure_ascii=False)
+
 
         screen.fill((0, 0, 0))
         screen.blit(resized_image, (x, y))
         pygame.display.update()
 
     i += 1
-
-# 저장할 때 key를 문자열로 변환해서 JSON 저장
-with open('./data/vec2name.json', 'w', encoding='utf-8') as f: # 인코딩 추가
-    json.dump({str(k): v for k, v in data.items()}, f, indent=4, ensure_ascii=False)
 
 pygame.quit()

@@ -1,40 +1,46 @@
 import json
+import torch
+import torch.nn as nn
 import numpy as np
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing import image
-from tensorflow.keras.applications.resnet50 import preprocess_input
+from PIL import Image
+from torchvision import models, transforms
 from sklearn.metrics.pairwise import cosine_similarity
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 def load_and_preprocess_image(img_path, target_size=(224, 224)):
-    """Loads and preprocesses an image."""
-    img = image.load_img(img_path, target_size=target_size)
-    img_array = image.img_to_array(img)
-    img_array = np.expand_dims(img_array, axis=0)
-    return preprocess_input(img_array)
+    """이미지를 불러오고 전처리합니다."""
+    preprocess = transforms.Compose([
+        transforms.Resize(target_size),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],  # ImageNet 기준
+                             std=[0.229, 0.224, 0.225]),
+    ])
+    img = Image.open(img_path).convert('RGB')
+    img_tensor = preprocess(img).unsqueeze(0)  # 배치 차원 추가
+    return img_tensor.to(device)
 
 def compute_embedding(model, img_path):
-    """Computes the embedding of an image using the given model."""
-    img = load_and_preprocess_image(img_path)
-    return model.predict(img).flatten()
+    """이미지의 임베딩을 계산합니다."""
+    model.eval()
+    with torch.no_grad():
+        img_tensor = load_and_preprocess_image(img_path)
+        embedding = model(img_tensor).cpu().numpy().flatten()
+    return embedding
 
-def find_most_similar_image(input_image_path, embeddings_path, model_path):
+def find_most_similar_image(input_image_path, embeddings_path, model_path=None):
     """
-    Finds the most similar image to the input image using precomputed embeddings.
-    
-    Args:
-        input_image_path (str): Path to the input image.
-        embeddings_path (str): Path to the precomputed embeddings.
-        model_path (str): Path to the pre-trained embedding model.
-    
-    Returns:
-        str: Path to the most similar image.
-        float: Similarity score.
+    입력 이미지와 가장 유사한 이미지를 찾습니다.
     """
-    # Load the saved embedding model and precomputed embeddings
-    model = load_model(model_path)
+    # ResNet50을 임베딩 모델로 사용하되, 마지막 fc 레이어 제거
+    resnet = models.resnet50(pretrained=True)
+    model = nn.Sequential(*list(resnet.children())[:-1])  # Global AvgPool 출력
+    model.to(device)
+
+    # 사전 계산된 임베딩 불러오기
     embeddings = np.load(embeddings_path, allow_pickle=True).item()
 
-    # Compute embedding for the input image
+    # 입력 이미지 임베딩 계산
     input_embedding = compute_embedding(model, input_image_path)
 
     max_similarity = -1
@@ -51,22 +57,15 @@ def find_most_similar_image(input_image_path, embeddings_path, model_path):
     return most_similar_image_path, max_similarity
 
 def main(path):
-    # Paths
-    model_path = "./model/embedding_model.h5"  # Path to the saved model
     input_image_path = path
-    embeddings_path = "./model/image_embeddings.npy"  # Path to the saved embeddings
+    embeddings_path = "./model/image_embeddings.npy"
 
-    # Find the most similar image
     similar_image, similarity_score = find_most_similar_image(
-        input_image_path, embeddings_path, model_path
+        input_image_path, embeddings_path
     )
-    with open("./data/instagram_posts.json", "r", encoding="utf-8") as file:
-        data = json.load(file)
 
+    print(similar_image)
     print(f"Similarity score: {similarity_score}")
-    print("")
-    #print(f"가장 비슷한 이미지: {similar_image}")
-    print("인스타그램 링크 : ",data[similar_image[16:]])
 
     if similarity_score >= 0.9:
         print("인스타 사진입니다.")
@@ -79,11 +78,8 @@ print("파일을 업로드하고, 이미지 주소를 입력해 검색하세요"
 print("1 을 입력하면 종료됩니다")
 print("\n\n")
 
-while 1:
+while True:
     a = input("검색하고 싶은 이미지의 링크를 입력하세요 : ")
     if a == "1":
         break
     main(a)
-    # try:
-    # except:
-    #     print("올바르지 않은 경로입니다.")
