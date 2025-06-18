@@ -33,7 +33,7 @@ def result_display_view(request):
         context.append(int(two2ten,2))
 
         text2two = ""
-        for j in ["QUALIFYING", "AD MARE", "ENTWURF", "expérgo", "AMND", "Fe3O4: BREAK", "Fe3O4: STICK OUT", "Fe3O4: FORWARD"]:
+        for j in ["입덕투어","이슈클럽","회포자","워크돌","설윤중심","절전동",그림일기 챗톡 vlog 이상한나라의엔믹스 차캐듀 비하인드 cover HBD]:
             two2ten += "1" if j in selected_person else "0"
         context.append(int(two2ten,2))
 
