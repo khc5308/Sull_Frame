@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,8 +28,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+import os
 
-# Application definition
+MEDIA_URL = '/data/img/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'data/img')
 
 INSTALLED_APPS = [
     'django.contrib.admin',

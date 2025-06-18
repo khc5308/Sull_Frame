@@ -3,9 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <title>tag2img</title>
+        <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f9f9f9;
+            margin: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h3 {
+            margin-top: 30px;
+            color: #444;
+        }
+
+        label {
+            margin-right: 12px;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 4px;
+        }
+
+        input[type="submit"] {
+            margin-top: 30px;
+            padding: 12px 24px;
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #1b5e20;
+        }
+    </style>
 </head>
 <body>
-    <h1>선택해주세요</h1>
+    <h1>태그로 이미지 검색하기</h1>
     <form action="{% url 'result_display' %}" method="POST">
         {% csrf_token %}
         <h3>사람 선택</h3>
@@ -24,6 +75,7 @@
         <input type="checkbox" name="activity_period" value="QUALIFYING" id="activity_qualifying"><label for="activity_qualifying">QUALIFYING</label>
         <input type="checkbox" name="activity_period" value="AD MARE" id="activity_admare"><label for="activity_admare">AD MARE</label>
         <input type="checkbox" name="activity_period" value="ENTWURF" id="activity_entwurf"><label for="activity_entwurf">ENTWURF</label>
+        <input type="checkbox" name="activity_period" value="Funky Glitter Christmas" id="activity_entwurf"><label for="activity_entwurf">FGC</label>
         <input type="checkbox" name="activity_period" value="expérgo" id="activity_expergo"><label for="activity_expergo">expérgo</label>
         <input type="checkbox" name="activity_period" value="AMND" id="activity_amnd"><label for="activity_amnd">AMND</label>
         <input type="checkbox" name="activity_period" value="Fe3O4: BREAK" id="activity_fe3o4_break"><label for="activity_fe3o4_break">Fe3O4: BREAK</label>

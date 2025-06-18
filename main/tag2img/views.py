@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.urls import reverse
+import json,os
 
 def tag2img_view(request):
     return render(request, 'tag2img.html')
@@ -18,26 +18,36 @@ def result_display_view(request):
         context = []
 
         text2two = ""
-        for j in ["단체","릴리", "해원", "설윤", "배이", "지우", "규진","동물","기타"]:
-            two2ten += "1" if j in selected_person else "0"
-        context.append(int(two2ten,2))
+        for j in ["단체","릴리", "해원", "설윤", "배이", "지우", "규진","기타","동물"]:
+            text2two += "1" if j in selected_person else "0"
+        context.append(int(text2two,2))
 
         text2two = ""
-        for j in ["QUALIFYING", "AD MARE", "ENTWURF", "expérgo", "AMND", "Fe3O4: BREAK", "Fe3O4: STICK OUT", "Fe3O4: FORWARD"]:
-            two2ten += "1" if j in selected_person else "0"
-        context.append(int(two2ten,2))
+        for j in ["QUALIFYING", "AD MARE", "ENTWURF","Funky Glitter Christmas", "expérgo", "AMND", "Fe3O4: BREAK", "Fe3O4: STICK OUT", "Fe3O4: FORWARD"]:
+            text2two += "1" if j in selected_activity_period else "0"
+        context.append(int(text2two,2))
 
         text2two = ""
-        for j in ["컨셉포토","포토북","음방","콘서트","홈마","live","sns"]:
-            two2ten += "1" if j in selected_person else "0"
-        context.append(int(two2ten,2))
+        for j in ["컨셉포토","음방","콘서트","홈마","cover","vlog","live","비하인드","HBD"]:
+            text2two += "1" if j in selected_category else "0"
+        context.append(int(text2two,2))
 
         text2two = ""
-        for j in ["입덕투어","이슈클럽","회포자","워크돌","설윤중심","절전동",그림일기 챗톡 vlog 이상한나라의엔믹스 차캐듀 비하인드 cover HBD]:
-            two2ten += "1" if j in selected_person else "0"
-        context.append(int(two2ten,2))
+        for j in ["입덕투어","이슈클럽","회포자","워크돌","설중","절전동","그림일기","챗톡","blog","이상한","차개듀","쮸뀨미"]:
+            text2two += "1" if j in selected_content_name else "0"
+        context.append(int(text2two,2))
 
+        text2two = ""
+        for j in ["어린이날", "앞머리", "단발", "금발", "자막"]:
+            text2two += "1" if j in selected_element else "0"
+        context.append(int(text2two,2))
 
-        return render(request, 'tag2img_result.html', context)
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'vec2name.json')) as f:
+            data = json.load(f)
+        try:
+            post = {"data" : data[str(tuple(context))]}
+        except:
+            post = {"data" : ""}
+        return render(request, 'tag2img_result.html', post)
     else:
         return redirect('input_form')

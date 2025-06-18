@@ -2,41 +2,128 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>선택 결과</title>
+    <title>검색 결과</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6; /* 부드러운 배경색 */
+            display: flex; /* body를 flex 컨테이너로 만들어 내부 요소 중앙 정렬 준비 */
+            flex-direction: column; /* 세로 방향 정렬 */
+            align-items: center; /* 가로 중앙 정렬 */
+            min-height: 100vh; /* 최소 높이를 뷰포트 전체로 설정 */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px; /* 최대 너비 제한 */
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center; /* 내부 텍스트 중앙 정렬 */
+            margin-bottom: 20px; /* 아래 여백 추가 */
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        /* 이미지들을 담을 컨테이너 */
+        .image-gallery {
+            display: flex; /* flexbox를 사용하여 이미지 정렬 */
+            flex-wrap: wrap; /* 컨테이너 너비를 넘으면 다음 줄로 넘김 */
+            justify-content: center; /* 이미지들을 가로 중앙에 정렬 */
+            gap: 20px; /* 이미지들 사이의 간격 */
+            padding: 20px 0; /* 상하 패딩 */
+        }
+
+        .image-item {
+            /* 이미지 개별 아이템 스타일 (선택 사항, 이미지 자체에 스타일 적용 가능) */
+            text-align: center;
+        }
+
+        .image-item img {
+            width: 200px; /* 기존 너비 유지 */
+            height: auto; /* 비율 유지 */
+            border: 3px solid #ddd; /* 테두리 */
+            border-radius: 8px; /* 둥근 모서리 */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+            transition: transform 0.3s ease, border-color 0.3s ease; /* 부드러운 전환 효과 */
+            display: block; /* 이미지를 블록 요소로 만들어 마진이 잘 적용되도록 함 */
+            margin: 0 auto; /* 이미지를 개별적으로도 중앙 정렬 */
+        }
+
+        .image-item img:hover {
+            transform: scale(1.05); /* 호버 시 약간 확대 */
+            border-color: #007bff; /* 호버 시 테두리 색상 변경 */
+        }
+
+        p.no-results {
+            color: #777;
+            font-size: 1.1em;
+            padding: 50px;
+            border: 1px dashed #ccc;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+
+        .back-link {
+            display: inline-block; /* 링크를 버튼처럼 보이게 */
+            padding: 12px 25px;
+            margin-top: 30px; /* 상단 여백 */
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px); /* 호버 시 약간 위로 이동 */
+        }
+
+        /* 미디어 쿼리: 작은 화면에 대한 조정 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .image-gallery {
+                gap: 15px;
+            }
+            .image-item img {
+                width: 150px; /* 작은 화면에서는 이미지 크기 줄이기 */
+            }
+            .back-link {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>당신의 선택 결과</h1>
-    {% if person %}
-        <p><strong>선택된 사람:</strong> {{ person }}</p>
-    {% else %}
-        <p>선택된 사람이 없습니다.</p>
-    {% endif %}
+    <div class="container">
+        <h1>검색 결과</h1>
 
-    {% if activity_period %}
-        <p><strong>선택된 활동기:</strong> {{ activity_period }}</p>
-    {% else %}
-        <p>선택된 활동기가 없습니다.</p>
-    {% endif %}
+        {% if data %}
+            <div class="image-gallery">
+                {% for img in data %}
+                    <div class="image-item">
+                        <img src="/data/img/{{ img }}" alt="{{ img }}">
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-results">검색된 결과가 없습니다.</p>
+        {% endif %}
 
-    {% if category %}
-        <p><strong>선택된 분류:</strong> {{ category }}</p>
-    {% else %}
-        <p>선택된 분류가 없습니다.</p>
-    {% endif %}
-
-    {% if content_name %}
-        <p><strong>선택된 컨텐츠 명:</strong> {{ content_name }}</p>
-    {% else %}
-        <p>선택된 컨텐츠 명이 없습니다.</p>
-    {% endif %}
-
-    {% if element %}
-        <p><strong>선택된 요소:</strong> {{ element }}</p>
-    {% else %}
-        <p>선택된 요소가 없습니다.</p>
-    {% endif %}
-
-    <br>
-    <a href="../">다시 선택하기</a>
+        <a href="../" class="back-link">다시 선택하기</a>
+    </div>
 </body>
 </html>

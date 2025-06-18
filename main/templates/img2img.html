@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>단일 이미지 업로드 및 미리보기</title>
+    <style>
+        /* CSS 스타일 */
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        h1, h2 {
+            color: #222;
+        }
+        #drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 20px;
+            width: 450px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
+            color: #777;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        #drop-area.highlight {
+            background-color: #e0f2f7;
+            border-color: #007bff;
+        }
+        #file-input {
+            display: none;
+        }
+        .icon-upload {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+        #file-info-container {
+            margin-top: 20px;
+            padding: 10px;
+            min-height: 50px;
+            width: 450px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            text-align: left;
+            display: none; /* 초기에는 숨김 */
+            flex-direction: column;
+            align-items: center;
+        }
+        .uploaded-file-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            width: 100%;
+        }
+        .uploaded-file-item img {
+            width: 80px; /* 미리보기 이미지 크기 증가 */
+            height: 80px;
+            object-fit: cover;
+            margin-right: 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .file-details {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .file-name {
+            font-weight: bold;
+            color: #444;
+        }
+        .file-size {
+            font-size: 0.9em;
+            color: #888;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        #action-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        #action-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        #cancel-button {
+            background-color: #dc3545;
+            color: white;
+        }
+        #cancel-button:hover {
+            background-color: #c82333;
+        }
+        #search-button {
+            background-color: #007bff;
+            color: white;
+        }
+        #search-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>이미지를 드래그 앤 드롭하세요!</h1>
+
+    <div id="drop-area">
+        <p>이미지 파일을 여기로 드롭하거나 클릭하여 선택하세요</p>
+        <input type="file" id="file-input" accept="image/jpeg, image/png, image/gif, image/bmp, image/webp">
+    </div>
+
+    <div id="file-info-container">
+        <h2>선택된 이미지:</h2>
+        <div id="uploaded-file-display" class="uploaded-file-item">
+            </div>
+        <div id="action-buttons">
+            <button id="cancel-button">취소</button>
+            <button id="search-button">검색</button>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('file-input');
+        const fileInfoContainer = document.getElementById('file-info-container');
+        const uploadedFileDisplay = document.getElementById('uploaded-file-display');
+        const cancelButton = document.getElementById('cancel-button');
+        const searchButton = document.getElementById('search-button');
+
+        let currentUploadedFile = null; 
+
+        // 초기 상태 설정
+        function resetUI() {
+            dropArea.style.display = 'flex'; // 드롭 영역 보이기
+            fileInfoContainer.style.display = 'none'; // 파일 정보 컨테이너 숨기기
+            uploadedFileDisplay.innerHTML = ''; // 파일 정보 초기화
+            currentUploadedFile = null; // 저장된 파일 정보 초기화
+            fileInput.value = ''; // input file 값 초기화 (동일 파일 재선택 가능하게)
+        }
+
+        resetUI(); // 페이지 로드 시 초기 상태로 설정
+
+        // 드롭 영역 클릭 시 파일 입력 필드 클릭
+        dropArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // 파일 입력 필드 변경 시 파일 처리
+        fileInput.addEventListener('change', (e) => {
+            // 단일 파일만 처리
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        // 드래그 오버 시 기본 동작 방지 및 하이라이트 효과
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // 드래그 엔터/오버 시 하이라이트 추가
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
+        });
+
+        // 드래그 리브/드롭 시 하이라이트 제거
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
+        });
+
+        // 파일 드롭 시 처리
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            // 단일 파일만 처리
+            if (dt.files.length > 0) {
+                handleFile(dt.files[0]);
+            }
+        }
+
+        function handleFile(file) {
+            // 허용되는 이미지 MIME 타입 목록
+            const allowedImageTypes = [
+                'image/jpeg',
+                'image/png',
+                'image/gif',
+                'image/bmp',
+                'image/webp'
+            ];
+
+            // 파일 크기 제한 (예: 5MB)
+            const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+            // 유효성 검사 및 메시지 표시
+            if (file.size > MAX_FILE_SIZE) {
+                alert(`"${file.name}" 파일은 너무 큽니다. (최대 5MB)`);
+                resetUI();
+                return;
+            }
+            if (!allowedImageTypes.includes(file.type)) {
+                alert(`"${file.name}" 파일은 이미지 파일이 아닙니다.`);
+                resetUI();
+                return;
+            }
+
+            // 유효성 검사를 통과하면 UI 업데이트
+            currentUploadedFile = file; // 현재 파일 저장
+            dropArea.style.display = 'none'; // 드롭 영역 숨기기
+            fileInfoContainer.style.display = 'flex'; // 파일 정보 컨테이너 보이기
+            uploadedFileDisplay.innerHTML = ''; // 기존 내용 초기화
+
+            const img = document.createElement('img');
+            const fileDetailsDiv = document.createElement('div');
+            fileDetailsDiv.classList.add('file-details');
+
+            const fileNameSpan = document.createElement('span');
+            fileNameSpan.classList.add('file-name');
+            fileNameSpan.textContent = file.name;
+
+            const fileSizeSpan = document.createElement('span');
+            fileSizeSpan.classList.add('file-size');
+            fileSizeSpan.textContent = `(${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+
+            fileDetailsDiv.appendChild(fileNameSpan);
+            fileDetailsDiv.appendChild(fileSizeSpan);
+
+            // 이미지 미리보기 생성
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                img.src = e.target.result;
+                img.alt = file.name;
+                uploadedFileDisplay.appendChild(img);
+                uploadedFileDisplay.appendChild(fileDetailsDiv);
+            };
+            reader.readAsDataURL(file); // 파일을 Data URL로 읽기
+        }
+
+        // 취소 버튼 클릭 이벤트
+        cancelButton.addEventListener('click', () => {
+            resetUI();
+        });
+        
+        searchButton.addEventListener('click', () => {
+            // 이곳에 추가
+        });
+    });
+</script>
+
+</body>
+</html>

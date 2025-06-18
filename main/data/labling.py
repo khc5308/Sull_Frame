@@ -1,11 +1,23 @@
 import pygame, os, threading, json
-from fn import *
 
 pygame.init()
 screen_width, screen_height = 960, 540
 running = True
 screen = pygame.display.set_mode((screen_width, screen_height))
 file_list = os.listdir("./data/img")
+
+
+# 릴리 해원 설윤 배이 지우 규진 기타 동물
+people = ["ㄷㅊ","ㄹㄹ", "ㅎㅇ", "ㅅㅇ", "ㅂㅇ", "ㅈㅇ", "ㄱㅈ", "ㄱㅌ", "ㄷㅁ"]
+# 퀄리파잉 o.o 다이스 펑글크 럽미 파티어클락 대쉬 별별별 노어밧미
+album = ["ㅋㄿㅇ","ㅇㅇ","ㄷㅇㅅ","ㅍㄱㅋ","ㄹㅁ","ㅍㅌㅇㅋㄹ","ㄷㅅ","ㅂㅂㅂ","ㄴㅇㅂㅁ"]
+# 분류
+sort = ["ㅁㅂ","음방","콘서트","홈마","cover","vlog","live","비하인드","HBD"]
+# 자컨
+contents = ["입덕투어","이슈클럽","회포자","워크돌","설중","절전동","그림일기"
+            ,"챗톡","blog","이상한","차개듀","쮸뀨미"]
+# 어린이 앞머리 장발 자막 
+element = ["어린이", "앞", "단", "금", "cc"]
 
 # 데이터 불러오기
 if os.path.exists('./data/vec2name.json'):
@@ -53,8 +65,6 @@ def get_inputs():
         for j in element:
             two2ten += "1" if j in value else "0"
         input_data.append(int(two2ten,2))
-
-        input_data.append(date2int(file_list[i][6:14]))  # 날짜 추가
 
     input_ready = True
     key = tuple(input_data)  # 딕셔너리 key로 사용하기 위해 튜플로
