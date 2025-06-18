@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>선택 결과</title>
+</head>
+<body>
+    <h1>당신의 선택 결과</h1>
+    {% if person %}
+        <p><strong>선택된 사람:</strong> {{ person }}</p>
+    {% else %}
+        <p>선택된 사람이 없습니다.</p>
+    {% endif %}
+
+    {% if activity_period %}
+        <p><strong>선택된 활동기:</strong> {{ activity_period }}</p>
+    {% else %}
+        <p>선택된 활동기가 없습니다.</p>
+    {% endif %}
+
+    {% if category %}
+        <p><strong>선택된 분류:</strong> {{ category }}</p>
+    {% else %}
+        <p>선택된 분류가 없습니다.</p>
+    {% endif %}
+
+    {% if content_name %}
+        <p><strong>선택된 컨텐츠 명:</strong> {{ content_name }}</p>
+    {% else %}
+        <p>선택된 컨텐츠 명이 없습니다.</p>
+    {% endif %}
+
+    {% if element %}
+        <p><strong>선택된 요소:</strong> {{ element }}</p>
+    {% else %}
+        <p>선택된 요소가 없습니다.</p>
+    {% endif %}
+
+    <br>
+    <a href="../">다시 선택하기</a>
+</body>
+</html>
