@@ -44,10 +44,11 @@ def result_display_view(request):
 
         with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'vec2name.json')) as f:
             data = json.load(f)
-        try:
+        if len(context):
             post = {"data" : data[str(tuple(context))]}
-        except:
+        else:
             post = {"data" : ""}
+    
         return render(request, 'tag2img_result.html', post)
     else:
         return redirect('input_form')
