@@ -44,7 +44,7 @@ def result_display_view(request):
 
         with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'vec2name.json')) as f:
             data = json.load(f)
-        if len(context):
+        if str(tuple(context)) in data:
             post = {"data" : data[str(tuple(context))]}
         else:
             post = {"data" : ""}

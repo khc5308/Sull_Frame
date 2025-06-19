@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>단일 이미지 업로드 및 미리보기</title>
+    <title>img2img</title>
     <style>
         /* CSS 스타일 */
         body {
@@ -271,8 +271,54 @@
         });
         
         searchButton.addEventListener('click', () => {
-            // 이곳에 추가
+            if (!currentUploadedFile) {
+                alert("이미지를 먼저 선택하세요.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', currentUploadedFile);
+
+            fetch("{% url 'upload_image' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("서버 응답:", data);
+                fetch("{% url 'result' %}", {
+                    method: 'POST',
+                    headers: {
+                        'file_url': getCookie(data.url),
+                    },
+                    body: formData
+                })
+            })
+            .catch(error => {
+                alert("업로드 실패");
+                console.error("에러:", error);
+            });
         });
+
+        // CSRF 토큰을 쿠키에서 가져오는 함수
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
     });
 </script>
 
