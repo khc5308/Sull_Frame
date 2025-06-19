@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>tag2img</title>
+        <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f9f9f9;
+            margin: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h3 {
+            margin-top: 30px;
+            color: #444;
+        }
+
+        label {
+            margin-right: 12px;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 4px;
+        }
+
+        input[type="submit"] {
+            margin-top: 30px;
+            padding: 12px 24px;
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+    <h1>태그로 이미지 검색하기</h1>
+    <form action="{% url 'result_display' %}" method="POST">
+        {% csrf_token %}
+        <h3>사람 선택</h3>
+        <input type="checkbox" name="person" value="단체" id="person_group"><label for="person_group">단체</label>
+        <input type="checkbox" name="person" value="릴리" id="person_lily"><label for="person_lily">릴리</label>
+        <input type="checkbox" name="person" value="해원" id="person_haewon"><label for="person_haewon">해원</label>
+        <input type="checkbox" name="person" value="설윤" id="person_sullyoon"><label for="person_sullyoon">설윤</label>
+        <input type="checkbox" name="person" value="배이" id="person_bae"><label for="person_bae">배이</label>
+        <input type="checkbox" name="person" value="지우" id="person_jiwoo"><label for="person_jiwoo">지우</label>
+        <input type="checkbox" name="person" value="규진" id="person_kyujin"><label for="person_kyujin">규진</label>
+        <input type="checkbox" name="person" value="동물" id="person_animal"><label for="person_animal">동물</label>
+        <input type="checkbox" name="person" value="기타" id="person_etc"><label for="person_etc">기타</label>
+        <br>
+
+        <h3>활동기 선택</h3>
+        <input type="checkbox" name="activity_period" value="QUALIFYING" id="activity_qualifying"><label for="activity_qualifying">QUALIFYING</label>
+        <input type="checkbox" name="activity_period" value="AD MARE" id="activity_admare"><label for="activity_admare">AD MARE</label>
+        <input type="checkbox" name="activity_period" value="ENTWURF" id="activity_entwurf"><label for="activity_entwurf">ENTWURF</label>
+        <input type="checkbox" name="activity_period" value="Funky Glitter Christmas" id="activity_entwurf"><label for="activity_entwurf">FGC</label>
+        <input type="checkbox" name="activity_period" value="expérgo" id="activity_expergo"><label for="activity_expergo">expérgo</label>
+        <input type="checkbox" name="activity_period" value="AMND" id="activity_amnd"><label for="activity_amnd">AMND</label>
+        <input type="checkbox" name="activity_period" value="Fe3O4: BREAK" id="activity_fe3o4_break"><label for="activity_fe3o4_break">Fe3O4: BREAK</label>
+        <input type="checkbox" name="activity_period" value="Fe3O4: STICK OUT" id="activity_fe3o4_stickout"><label for="activity_fe3o4_stickout">Fe3O4: STICK OUT</label>
+        <input type="checkbox" name="activity_period" value="Fe3O4: FORWARD" id="activity_fe3o4_forward"><label for="activity_fe3o4_forward">Fe3O4: FORWARD</label>
+        <br>
+
+        <h3>분류</h3>
+        <input type="checkbox" name="category" value="컨셉포토" id="cat_conceptphoto"><label for="cat_conceptphoto">컨셉포토</label>
+        <input type="checkbox" name="category" value="포토북" id="cat_photobook"><label for="cat_photobook">포토북</label>
+        <input type="checkbox" name="category" value="음방" id="cat_musicshow"><label for="cat_musicshow">음방</label>
+        <input type="checkbox" name="category" value="콘서트" id="cat_concert"><label for="cat_concert">콘서트</label>
+        <input type="checkbox" name="category" value="홈마" id="cat_homma"><label for="cat_homma">홈마</label>
+        <input type="checkbox" name="category" value="live" id="cat_live"><label for="cat_live">live</label>
+        <input type="checkbox" name="category" value="sns" id="cat_sns"><label for="cat_sns">sns</label>
+        <br>
+
+        <h3>자컨</h3>
+        <input type="checkbox" name="content_name" value="입덕투어" id="content_iptour"><label for="content_iptour">입덕투어</label>
+        <input type="checkbox" name="content_name" value="이슈클럽" id="content_issueclub"><label for="content_issueclub">이슈클럽</label>
+        <input type="checkbox" name="content_name" value="회포자" id="content_hwaepoza"><label for="content_hwaepoza">회포자</label>
+        <input type="checkbox" name="content_name" value="워크돌" id="content_workdol"><label for="content_workdol">워크돌</label>
+        <input type="checkbox" name="content_name" value="설윤중심" id="content_sullyooncenter"><label for="content_sullyooncenter">설윤중심</label>
+        <input type="checkbox" name="content_name" value="절전동" id="content_jeoljeon"><label for="content_jeoljeon">절전동</label>
+        <input type="checkbox" name="content_name" value="그림일기" id="content_diary"><label for="content_diary">그림일기</label>
+        <input type="checkbox" name="content_name" value="챗톡" id="content_chattok"><label for="content_chattok">챗톡</label>
+        <input type="checkbox" name="content_name" value="vlog" id="content_vlog"><label for="content_vlog">vlog</label>
+        <input type="checkbox" name="content_name" value="이상한나라의엔믹스" id="content_wonderland"><label for="content_wonderland">이상한나라의엔믹스</label>
+        <input type="checkbox" name="content_name" value="차캐듀" id="content_chakkyedu"><label for="content_chakkyedu">차캐듀</label>
+        <input type="checkbox" name="content_name" value="비하인드" id="content_behind"><label for="content_behind">비하인드</label>
+        <input type="checkbox" name="content_name" value="cover" id="content_cover"><label for="content_cover">cover</label>
+        <input type="checkbox" name="content_name" value="HBD" id="content_hbd"><label for="content_hbd">HBD</label>
+        <br>
+
+        <h3>요소</h3>
+        <input type="checkbox" name="element" value="어린이날" id="element_childrensday"><label for="element_childrensday">어린이날</label>
+        <input type="checkbox" name="element" value="앞머리" id="element_bangs"><label for="element_bangs">앞머리</label>
+        <input type="checkbox" name="element" value="단발" id="element_bob"><label for="element_bob">단발</label>
+        <input type="checkbox" name="element" value="금발" id="element_blonde"><label for="element_blonde">금발</label>
+        <input type="checkbox" name="element" value="자막 여부" id="element_subtitle"><label for="element_subtitle">자막 여부</label>
+        <br>
+
+        <input type="submit" value="선택 완료">
+    </form>
+</body>
+</html>

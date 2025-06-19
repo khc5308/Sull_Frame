@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 메뉴</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            color: #333;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px 60px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); 
+            text-align: center;
+            max-width: 400px; 
+            width: 90%; 
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+        }
+
+        .menu-link {
+            display: block; 
+            margin: 15px 0; 
+            padding: 15px 25px;
+            background-color: #007bff; 
+            color: white; 
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600; 
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; 
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+        }
+
+        .menu-link:hover {
+            background-color: #0056b3; 
+            transform: translateY(-3px); 
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3); 
+        }
+
+        .menu-link:active {
+            transform: translateY(0); 
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2); 
+        }
+
+        .menu-link + .menu-link {
+            margin-top: 15px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>메뉴 선택</h1>
+        <a href="/tag2img" class="menu-link">태그 검색</a>
+        <a href="/img2img" class="menu-link">유사 이미지</a>
+    </div>
+</body>
+</html>
