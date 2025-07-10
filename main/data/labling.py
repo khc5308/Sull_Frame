@@ -4,8 +4,8 @@ pygame.init()
 screen_width, screen_height = 960, 540
 running = True
 screen = pygame.display.set_mode((screen_width, screen_height))
-file_list = os.listdir("./data/img")
-
+file_list =  os.listdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), "img"))
+print("\n",type(file_list),"\n")
 
 # 릴리 해원 설윤 배이 지우 규진 기타 동물
 people = ["ㄷㅊ","ㄹㄹ", "ㅎㅇ", "ㅅㅇ", "ㅂㅇ", "ㅈㅇ", "ㄱㅈ", "ㄱㅌ", "ㄷㅁ"]
@@ -20,8 +20,8 @@ contents = ["입덕투어","이슈클럽","회포자","워크돌","설중","절�
 element = ["어린이", "앞", "단", "금", "cc"]
 
 # 데이터 불러오기
-if os.path.exists('./data/vec2name.json'):
-    with open('./data/vec2name.json', 'r', encoding='utf-8') as f: # 인코딩 추가
+if os.path.exists('./main/data/vec2name.json'):
+    with open('./main/data/vec2name.json', 'r', encoding='utf-8') as f: # 인코딩 추가
         raw_data = json.load(f)
         # JSON에서 불러올 때는 키가 문자열이므로 다시 튜플(int)로 변환
         # 예: "(123, 456)" -> (123, 456)
@@ -81,6 +81,9 @@ for files in data.values():
     for f_name in files:
         processed_files.add(f_name)
 
+print("\n")
+print(data.values())
+print("\n")
 i = 0
 while i < len(file_list) and file_list[i] in processed_files:
     i += 1
@@ -89,7 +92,7 @@ while running and i < len(file_list):
     print(f"i = {i}")
 
     #region 이미지 배치
-    img = pygame.image.load("./data/img/" + file_list[i]).convert_alpha()
+    img = pygame.image.load("./main/data/img/" + file_list[i]).convert_alpha()
     img_width, img_height = img.get_size()
 
     scale_w = screen_width / img_width

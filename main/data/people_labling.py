@@ -23,7 +23,7 @@ MODEL_NAME = 'VGG-Face'
 
 # YOLOv8 nano 모델 사용
 try:
-    face_detector = YOLO('./main/data/yolov8n-face.pt') 
+    face_detector = YOLO('main\data\yolov11n-face.pt') 
     face_detector.to(DEVICE)
 except Exception as e:
     print(f"YOLO 모델 로딩 실패: {e}")
@@ -47,7 +47,6 @@ for person_name in tqdm(KNOWN_PERSON_NAMES, desc="기준 인물 처리 중"):
                 img = cv2.imread(filepath)
                 if img is None: continue
 
-                # ✨ YOLO로 얼굴 탐지
                 detections = face_detector(img, verbose=False)
 
                 # 탐지된 첫 번째 얼굴만 사용 (기준 이미지는 인물 1명으로 가정)
@@ -78,7 +77,6 @@ for name, embeddings in reference_embeddings.items():
 print("✅ 기준 데이터베이스 생성 완료.")
 
 
-# --- 3. 대상 이미지 분석 및 라벨링 ---
 
 print(f"\n'{TARGET_DIR}' 폴더의 이미지를 분석합니다...")
 os.makedirs(TARGET_DIR, exist_ok=True)
